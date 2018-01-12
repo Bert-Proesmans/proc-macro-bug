@@ -1,0 +1,15 @@
+[package]
+name = "pot"
+version = "0.1.0"
+authors = ["Bert Proesmans <bproesmans@hotmail.com>"]
+
+[workspace]
+# Only exclude the sub-root workspace declarations here. This method prevents 
+# Cargo from complaining about multiple defined root workspaces.
+exclude = [
+	"action_derive",		
+]
+
+[dependencies]
+action_macros = {path = "action_derive/action_macros"}
+action_traits = {path = "action_derive/action_traits"}
