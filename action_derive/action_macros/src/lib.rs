@@ -6,7 +6,7 @@ extern crate proc_macro2;
 extern crate quote;
 extern crate syn;
 
-use proc_macro2::TokenStream;
+use proc_macro2::{TokenStream, Span};
 use syn::DeriveInput;
 
 #[proc_macro_derive(ActionState)]
@@ -29,11 +29,20 @@ pub fn derive_action(input: proc_macro::TokenStream) -> proc_macro::TokenStream 
 }
 
 fn impl_derive_action(ast: &DeriveInput) -> TokenStream {
+
+    // Declare the action_traits call-site path token.
+    //
+    // The default `def_site` will try to resolve the "action_traits" int he
+    // context of this crate, which doesn't make sense for proc_macros in
+    // most cases.
+    let span = Span::call_site();
+    let action_traits = quote_spanned!(span=> ::action_traits );
+
     // Retrieves identifier of AST node
     let name = &ast.ident;
     let tokens = quote!{
         #[automatically_derived]
-        impl ::action_traits::Actionable for #name {
+        impl #action_traits::Actionable for #name {
             // TODO add method implementations here
         }
     };
@@ -62,11 +71,20 @@ pub fn derive_trigger(input: proc_macro::TokenStream) -> proc_macro::TokenStream
 }
 
 fn impl_derive_trigger(ast: &DeriveInput) -> TokenStream {
+
+    // Declare the action_traits call-site path token.
+    //
+    // The default `def_site` will try to resolve the "action_traits" int he
+    // context of this crate, which doesn't make sense for proc_macros in
+    // most cases.
+    let span = Span::call_site();
+    let action_traits = quote_spanned!(span=> ::action_traits );
+
     // Retrieves identifier of AST node
     let name = &ast.ident;
     let tokens = quote!{
         #[automatically_derived]
-        impl ::action_traits::Triggerable for #name {
+        impl #action_traits::Triggerable for #name {
             // TODO add method implementations here
         }
     };
